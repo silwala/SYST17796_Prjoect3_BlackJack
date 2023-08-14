@@ -1,55 +1,50 @@
-/**
- * SYST 17796 Project Base code.
- * Students can modify and extend to implement their game.
- * Add your name as an author and the date!
- */
+//@Author: gautasan
+
 package ca.sheridancollege.project;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.List;
 
-/**
- * A concrete class that represents any grouping of cards for a Game. HINT, you might want to subclass this more than
- * once. The group of cards has a maximum size attribute which is flexible for reuse.
- *
- * @author dancye
- * @author Paul Bonenfant Jan 2020
- */
 public class GroupOfCards {
+    private final List<Card> cards = new ArrayList<>(); // List to store the cards
 
-    //The group of cards, stored in an ArrayList
-    private ArrayList<Card> cards;
-    private int size;//the size of the grouping
-
-    public GroupOfCards(int size) {
-        this.size = size;
+    // Add a card to the group
+    public void addCard(Card card) {
+        cards.add(card);
     }
 
-    /**
-     * A method that will get the group of cards as an ArrayList
-     *
-     * @return the group of cards.
-     */
-    public ArrayList<Card> getCards() {
-        return cards;
+    // Calculate the total value of the cards in the group
+    public int getValue() {
+        int totalValue = 0;
+        int numAces = 0;
+
+        for (Card card : cards) {
+            totalValue += card.getRank().ordinal() + 2; // Add the value of each card
+            if (card.getRank() == Rank.ACE) {
+                numAces++; // Count the number of Aces in the group
+            }
+        }
+
+        // Adjust the value if there are Aces and the total value is over 21
+        while (numAces > 0 && totalValue > 21) {
+            totalValue -= 10;
+            numAces--;
+        }
+
+        return totalValue;
     }
 
-    public void shuffle() {
-        Collections.shuffle(cards);
+    // Clear the cards from the group
+    public void clear() {
+        cards.clear();
     }
 
-    /**
-     * @return the size of the group of cards
-     */
-    public int getSize() {
-        return size;
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Card card : cards) {
+            stringBuilder.append(card.toString()).append(", "); // Append each card's string representation
+        }
+        return stringBuilder.toString();
     }
-
-    /**
-     * @param size the max size for the group of cards
-     */
-    public void setSize(int size) {
-        this.size = size;
-    }
-
-}//end class
+}
